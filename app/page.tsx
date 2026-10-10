@@ -1,5 +1,5 @@
-
 "use client";
+import type React from "react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,7 +14,29 @@ import { BsLightningChargeFill, BsGraphUpArrow, BsPlugFill } from "react-icons/b
 import { RiExchangeFundsLine } from "react-icons/ri";
 
 // Paste your Google Form link here (Form -> Send -> link icon -> Copy).
-const WAITLIST_FORM_URL = "https://forms.gle/kq9QBpKYUzPcwYq99";
+const WAITLIST_FORM_URL = "https://forms.gle/REPLACE_WITH_YOUR_FORM_LINK";
+
+// Sign-in and dashboard are not open yet. Set this to true when they are ready
+// and every sign-in / dashboard link becomes clickable again.
+const AUTH_ENABLED = false;
+
+function AuthLink({
+  href, className, onClick, children,
+}: {
+  href: string;
+  className?: string;
+  onClick?: () => void;
+  children: React.ReactNode;
+}) {
+  if (AUTH_ENABLED) {
+    return <Link href={href} className={className} onClick={onClick}>{children}</Link>;
+  }
+  return (
+    <span className={`${className ?? ""} is-disabled`} role="link" aria-disabled="true" tabIndex={-1}>
+      {children}
+    </span>
+  );
+}
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -330,6 +352,10 @@ export default function Home() {
 
         .cta-link { text-decoration: none; }
 
+        /* Inactive sign-in / dashboard links */
+        .is-disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; user-select: none; filter: grayscale(0.6); box-shadow: none; }
+        .footer-links span.is-disabled { font-size: 13px; color: rgba(255,255,255,0.4); }
+
         /* MOBILE OPTIMIZATIONS */
         html { -webkit-text-size-adjust: 100%; }
         a, button, summary, select { -webkit-tap-highlight-color: transparent; }
@@ -402,7 +428,7 @@ export default function Home() {
               <li><a href="#faq">FAQ</a></li>
             </ul>
             <div className="nav-ctas">
-              <Link href="/auth/signin" className="nav-signin">Sign in</Link>
+              <AuthLink href="/auth/signin" className="nav-signin">Sign in</AuthLink>
               <a href={WAITLIST_FORM_URL} target="_blank" rel="noopener noreferrer" className="btn-primary">
                 Join Waitlist <FaArrowRight size={11} />
               </a>
@@ -424,9 +450,9 @@ export default function Home() {
           <a href={WAITLIST_FORM_URL} target="_blank" rel="noopener noreferrer" className="mobile-btn-primary" onClick={() => setMenuOpen(false)}>
             Join the Waitlist <FaArrowRight size={14} />
           </a>
-          <Link href="/auth/signin" className="mobile-btn-outline" onClick={() => setMenuOpen(false)}>
+          <AuthLink href="/auth/signin" className="mobile-btn-outline" onClick={() => setMenuOpen(false)}>
             Sign in to Pesasa Spend
-          </Link>
+          </AuthLink>
         </div>
 
         {/* HERO */}
@@ -692,9 +718,9 @@ export default function Home() {
                     </div>
                   </div>
                 ))}
-                <Link href="/auth/signin" className="dash-link">
-                  Sign in to your dashboard <FaArrowRight size={11} />
-                </Link>
+                <AuthLink href="/auth/signin" className="dash-link">
+                  {AUTH_ENABLED ? <>Sign in to your dashboard <FaArrowRight size={11} /></> : "Dashboard coming soon"}
+                </AuthLink>
               </div>
             </div>
           </div>
@@ -766,7 +792,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* LEGACY PRODUCT 
+        {/* LEGACY PRODUCT */}
+        {AUTH_ENABLED && (
           <section className="legacy">
           <div className="container">
             <div className="legacy-inner">
@@ -778,14 +805,13 @@ export default function Home() {
                 </p>
               </div>
               <div className="legacy-btns">
-                <Link href="/auth/signin" className="legacy-btn">Sign in</Link>
-                <Link href="/merchant/signin" className="legacy-btn"><FaStore size={12} /> Merchant sign in</Link>
+                <AuthLink href="/auth/signin" className="legacy-btn">Sign in</AuthLink>
+                <AuthLink href="/merchant/signin" className="legacy-btn"><FaStore size={12} /> Merchant sign in</AuthLink>
               </div>
             </div>
           </div>
         </section>
-        */}
-        
+        )}
 
         {/* FAQ */}
         <section id="faq" className="section">
@@ -808,7 +834,7 @@ export default function Home() {
               </details>
               <details>
                 <summary>What happens to the existing Pesasa app?</summary>
-                <p>Our controlled-spending product remains available. You can sign in at any time using the links above.</p>
+                <p>Sign-in is paused for now while we prepare the new platform. We&apos;ll announce here when it&apos;s back.</p>
               </details>
             </div>
           </div>
@@ -842,8 +868,8 @@ export default function Home() {
               <div>
                 <div className="footer-col-title">Company</div>
                 <ul className="footer-links">
-                  <li><Link href="/auth/signin">Pesasa Spend</Link></li>
-                  <li><Link href="/merchant/signin">Merchants</Link></li>
+                  <li><AuthLink href="/auth/signin">Pesasa Spend</AuthLink></li>
+                  <li><AuthLink href="/merchant/signin">Merchants</AuthLink></li>
                   <li><a href="#">Privacy Policy</a></li>
                   <li><a href="#">Terms of Service</a></li>
                 </ul>
