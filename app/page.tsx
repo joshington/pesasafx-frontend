@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
@@ -13,11 +12,9 @@ import { MdCurrencyExchange, MdOutlineAccountBalanceWallet, MdOutlineRoute, MdLo
 import { BsLightningChargeFill, BsGraphUpArrow, BsPlugFill } from "react-icons/bs";
 import { RiExchangeFundsLine } from "react-icons/ri";
 
-// Waitlist submissions are POSTed to your separate backend.
-// Set NEXT_PUBLIC_API_URL in .env.local (e.g. https://api.pesasa.xyz) and make sure
-// the backend allows CORS from https://pesasa.xyz.
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
-const WAITLIST_ENDPOINT = `${API_URL}/waitlist`;
+// Waitlist submissions are POSTed to the Next.js API route in app/api/waitlist/route.ts,
+// which emails each signup to you.
+const WAITLIST_ENDPOINT = "/api/waitlist";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -123,7 +120,7 @@ export default function Home() {
         .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 999px; padding: 5px 14px; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.85); letter-spacing: 0.4px; margin-bottom: 18px; }
         .hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #7ee07e; animation: pulse 2s infinite; }
         @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
-        .hero-title { font-family: 'Outfit', sans-serif; font-size: clamp(32px, 6.4vw, 60px); font-weight: 900; color: #fff; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 18px; }
+        .hero-title { font-family: 'Outfit', sans-serif; font-size: clamp(30px, 6vw, 56px); font-weight: 900; color: #fff; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 18px; }
         .hero-title-accent { color: #7ee07e; display: block; }
         .hero-desc { font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.75); margin-bottom: 28px; }
         @media (min-width: 640px) { .hero-desc { font-size: 17px; } }
@@ -459,7 +456,7 @@ export default function Home() {
                   Early access · Building on Stellar
                 </div>
                 <h1 className="hero-title">
-                  Cross-border payouts,
+                  On-chain FX for cross-border payouts,
                   <span className="hero-title-accent">zero liquidity.</span>
                 </h1>
                 <p className="hero-desc">
@@ -839,9 +836,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* LEGACY PRODUCT 
-        
-          <section className="legacy">
+        {/* LEGACY PRODUCT */}
+        <section className="legacy">
           <div className="container">
             <div className="legacy-inner">
               <div>
@@ -858,9 +854,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        */}
-        
 
         {/* FAQ */}
         <section id="faq" className="section">
