@@ -1,6 +1,6 @@
 
 "use client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -13,11 +13,8 @@ import { MdCurrencyExchange, MdOutlineAccountBalanceWallet, MdOutlineRoute, MdLo
 import { BsLightningChargeFill, BsGraphUpArrow, BsPlugFill } from "react-icons/bs";
 import { RiExchangeFundsLine } from "react-icons/ri";
 
-// Waitlist submissions are POSTed to the Next.js API route in app/api/waitlist/route.ts,
-// which emails each signup to you.
-const WAITLIST_ENDPOINT = "/api/waitlist";
-
-type Status = "idle" | "loading" | "success" | "error";
+// Paste your Google Form link here (Form -> Send -> link icon -> Copy).
+const WAITLIST_FORM_URL = "https://forms.gle/kq9QBpKYUzPcwYq99";
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -35,29 +32,6 @@ export default function Home() {
       window.removeEventListener("resize", onResize);
     };
   }, [menuOpen]);
-  const [status, setStatus] = useState<Status>("idle");
-  const [errorMsg, setErrorMsg] = useState("");
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setStatus("loading");
-    setErrorMsg("");
-    const form = e.currentTarget;
-    const data = Object.fromEntries(new FormData(form).entries());
-    try {
-      const res = await fetch(WAITLIST_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) throw new Error("Request failed");
-      setStatus("success");
-      form.reset();
-    } catch {
-      setStatus("error");
-      setErrorMsg("Something went wrong. Please try again or email info@pesasa.xyz.");
-    }
-  }
 
   return (
     <>
@@ -354,6 +328,8 @@ export default function Home() {
         .footer-bottom-links a { font-size: 12px; color: rgba(255,255,255,0.28); text-decoration: none; }
         .footer-bottom-links a:hover { color: rgba(255,255,255,0.55); }
 
+        .cta-link { text-decoration: none; }
+
         /* MOBILE OPTIMIZATIONS */
         html { -webkit-text-size-adjust: 100%; }
         a, button, summary, select { -webkit-tap-highlight-color: transparent; }
@@ -427,7 +403,7 @@ export default function Home() {
             </ul>
             <div className="nav-ctas">
               <Link href="/auth/signin" className="nav-signin">Sign in</Link>
-              <a href="#waitlist" className="btn-primary">
+              <a href={WAITLIST_FORM_URL} target="_blank" rel="noopener noreferrer" className="btn-primary">
                 Join Waitlist <FaArrowRight size={11} />
               </a>
               <button className="nav-hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu" aria-expanded={menuOpen}>
@@ -445,7 +421,7 @@ export default function Home() {
           <a href="#networks" className="mobile-menu-link" onClick={() => setMenuOpen(false)}>Networks</a>
           <a href="#faq" className="mobile-menu-link" onClick={() => setMenuOpen(false)}>FAQ</a>
           <div className="mobile-menu-divider" />
-          <a href="#waitlist" className="mobile-btn-primary" onClick={() => setMenuOpen(false)}>
+          <a href={WAITLIST_FORM_URL} target="_blank" rel="noopener noreferrer" className="mobile-btn-primary" onClick={() => setMenuOpen(false)}>
             Join the Waitlist <FaArrowRight size={14} />
           </a>
           <Link href="/auth/signin" className="mobile-btn-outline" onClick={() => setMenuOpen(false)}>
@@ -473,7 +449,7 @@ export default function Home() {
                   pre-funding a single float account.
                 </p>
                 <div className="hero-ctas">
-                  <a href="#waitlist" className="hero-btn-white">
+                  <a href={WAITLIST_FORM_URL} target="_blank" rel="noopener noreferrer" className="hero-btn-white">
                     Join the Waitlist <FaArrowRight size={13} />
                   </a>
                   <a href="#how" className="hero-btn-ghost">See how it works</a>
@@ -775,80 +751,16 @@ export default function Home() {
               </div>
 
               <div className="form-card">
-                {status === "success" ? (
-                  <div className="success">
-                    <div className="success-icon"><FaCheckCircle size={28} /></div>
-                    <div className="success-title">You&apos;re on the list!</div>
-                    <p className="success-desc">
-                      Thanks for joining. We&apos;ll be in touch with updates and early access details.
-                    </p>
-                    <button className="success-link" onClick={() => setStatus("idle")}>
-                      Add another business
-                    </button>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit}>
-                    <div className="form-title">Join the waitlist</div>
-                    <p className="form-sub">Takes less than a minute.</p>
-
-                    {/* honeypot */}
-                    <div className="hp" aria-hidden="true">
-                      <label>Leave blank<input type="text" name="website" tabIndex={-1} autoComplete="off" /></label>
-                    </div>
-
-                    <div className="form-grid two">
-                      <div className="field">
-                        <label htmlFor="name">Your name</label>
-                        <input id="name" name="name" type="text" required placeholder="Jane Doe" autoComplete="name" />
-                      </div>
-                      <div className="field">
-                        <label htmlFor="email">Work email</label>
-                        <input id="email" name="email" type="email" required placeholder="jane@company.com" autoComplete="email" />
-                      </div>
-                    </div>
-
-                    <div className="form-grid two" style={{ marginTop: 14 }}>
-                      <div className="field">
-                        <label htmlFor="company">Company</label>
-                        <input id="company" name="company" type="text" required placeholder="Company name" autoComplete="organization" />
-                      </div>
-                      <div className="field">
-                        <label htmlFor="corridor">Corridor of interest</label>
-                        <select id="corridor" name="corridor" defaultValue="" required>
-                          <option value="" disabled>Select one</option>
-                          <option>Stellar → Kenya (M-Pesa)</option>
-                          <option>Stellar → Uganda (UGX)</option>
-                          <option>Base → Kenya (M-Pesa)</option>
-                          <option>Base → Uganda (UGX)</option>
-                          <option>Other country</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className="form-grid" style={{ marginTop: 14 }}>
-                      <div className="field">
-                        <label htmlFor="volume">Expected monthly volume</label>
-                        <select id="volume" name="volume" defaultValue="">
-                          <option value="">Prefer not to say</option>
-                          <option>Under $10k</option>
-                          <option>$10k – $100k</option>
-                          <option>$100k – $1M</option>
-                          <option>Over $1M</option>
-                        </select>
-                      </div>
-                      <div className="field">
-                        <label htmlFor="notes">Anything we should know? (optional)</label>
-                        <textarea id="notes" name="notes" placeholder="Your use case, current setup, timelines…" />
-                      </div>
-                    </div>
-
-                    <button type="submit" className="submit-btn" disabled={status === "loading"}>
-                      {status === "loading" ? "Joining…" : <>Join the Waitlist <FaArrowRight size={13} /></>}
-                    </button>
-                    {status === "error" && <div className="form-error">{errorMsg}</div>}
-                    <p className="form-note">No spam. We&apos;ll only email you about Pesasa early access.</p>
-                  </form>
-                )}
+                <div className="form-title">Join the waitlist</div>
+                <p className="form-sub">
+                  Tell us about your business and the corridors you need. It takes about a minute.
+                </p>
+                <a href={WAITLIST_FORM_URL} target="_blank" rel="noopener noreferrer" className="submit-btn cta-link">
+                  Open the waitlist form <FaArrowRight size={13} />
+                </a>
+                <p className="form-note">
+                  Opens a Google Form in a new tab. No spam. We&apos;ll only email you about Pesasa early access.
+                </p>
               </div>
             </div>
           </div>
