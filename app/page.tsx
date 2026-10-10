@@ -1,3 +1,4 @@
+
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
@@ -224,6 +225,12 @@ export default function Home() {
         .net-name { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
         .net-card.primary .net-name { color: var(--green-mid); }
         .net-desc { font-size: 14px; color: var(--text-soft); line-height: 1.65; }
+        .country-row { max-width: 760px; margin: 28px auto 0; text-align: center; }
+        .country-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 12px; }
+        .country-chips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .country-chip { display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--green-light); color: var(--green-mid); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 14px; padding: 9px 16px; border-radius: 999px; }
+        .country-chip small { font-family: 'DM Sans', sans-serif; font-weight: 500; color: var(--text-soft); font-size: 12px; }
+        .country-chip.more { border-style: dashed; border-color: var(--border); color: var(--text-soft); }
 
         /* WAITLIST */
         .nav-signin { font-size: 13px; font-weight: 600; color: var(--text-mid); text-decoration: none; padding: 9px 12px; border-radius: 10px; display: none; transition: color 0.15s, background 0.15s; }
@@ -474,6 +481,8 @@ export default function Home() {
                 <div className="hero-chains">
                   <span className="chain-pill"><span className="hero-badge-dot" /> Stellar · first</span>
                   <span className="chain-pill soon">Base · coming next</span>
+                  <span className="chain-pill"><FaMapMarkerAlt size={10} /> Uganda</span>
+                  <span className="chain-pill"><FaMapMarkerAlt size={10} /> Kenya</span>
                 </div>
               </div>
 
@@ -528,7 +537,7 @@ export default function Home() {
               {[
                 { value: "Zero",       label: "Pre-funded liquidity" },
                 { value: "Stellar",    label: "First supported network" },
-                { value: "M-Pesa+UGX", label: "Local payout rails" },
+                { value: "2 countries", label: "Uganda & Kenya at launch" },
                 { value: "Base",       label: "Coming next" },
               ].map((t) => (
                 <div key={t.label} className="trust-item">
@@ -735,6 +744,15 @@ export default function Home() {
                 <p className="net-desc">Next on the roadmap, giving clients on Base the same zero-liquidity payout experience.</p>
               </div>
             </div>
+
+            <div className="country-row">
+              <div className="country-label">Supported countries</div>
+              <div className="country-chips">
+                <span className="country-chip"><FaMapMarkerAlt size={12} /> Uganda <small>UGX</small></span>
+                <span className="country-chip"><FaMapMarkerAlt size={12} /> Kenya <small>M-Pesa</small></span>
+                <span className="country-chip more">More coming</span>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -798,11 +816,11 @@ export default function Home() {
                         <label htmlFor="corridor">Corridor of interest</label>
                         <select id="corridor" name="corridor" defaultValue="" required>
                           <option value="" disabled>Select one</option>
-                          <option>Stellar → M-Pesa</option>
-                          <option>Stellar → UGX</option>
-                          <option>Base → M-Pesa</option>
-                          <option>Base → UGX</option>
-                          <option>Other</option>
+                          <option>Stellar → Kenya (M-Pesa)</option>
+                          <option>Stellar → Uganda (UGX)</option>
+                          <option>Base → Kenya (M-Pesa)</option>
+                          <option>Base → Uganda (UGX)</option>
+                          <option>Other country</option>
                         </select>
                       </div>
                     </div>
@@ -868,7 +886,7 @@ export default function Home() {
               </details>
               <details>
                 <summary>Which networks and payout methods are supported?</summary>
-                <p>We&apos;re building on Stellar first, with Base planned next. Payouts target M-Pesa and UGX.</p>
+                <p>We&apos;re building on Stellar first, with Base planned next. For now we&apos;re focused on Uganda (UGX) and Kenya (M-Pesa), with more countries to follow.</p>
               </details>
               <details>
                 <summary>Is this live yet?</summary>
