@@ -766,8 +766,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* LEGACY PRODUCT */}
-        <section className="legacy">
+        {/* LEGACY PRODUCT 
+          <section className="legacy">
           <div className="container">
             <div className="legacy-inner">
               <div>
@@ -784,6 +784,8 @@ export default function Home() {
             </div>
           </div>
         </section>
+        */}
+        
 
         {/* FAQ */}
         <section id="faq" className="section">
